@@ -1,5 +1,4 @@
 # nn.js
-====
 
 JavaScript Neural Network.
 
@@ -7,6 +6,7 @@ JavaScript Neural Network.
 
 Artificial Neural Network (Deep Learning) Project.
 Perceptron, Backpropagation, Convolutional, Recurrent,,
+
 Algorithm is implemented object oriented JavaScript.
 It works on your browser powerd by jQuery.
 
