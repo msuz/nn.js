@@ -4,12 +4,12 @@ https://github.com/msuz/nn.js
 */
 
 NeuronCell = function() {
-  this.id = this.generateRandomString();
+  this.id = this.getRandomString();
   this.w = {};
   this.v = 0.0;
 };
 
-NeuronCell.prototype.generateRandomString = function( len ) {
+NeuronCell.prototype.getRandomString = function( len ) {
   var l = len || 8;
   var c = "abcdefghijklmnopqrstuvwxyz0123456789";
   var cl = c.length;
@@ -18,6 +18,14 @@ NeuronCell.prototype.generateRandomString = function( len ) {
     r += c[ Math.floor( Math.random() * cl ) ];
   }
   return r;
+};
+
+NeuronCell.prototype.getRandomNumber = function( a, b ) {
+  var min = Math.min( a, b ) || -1.0;
+  var max = Math.max( a, b ) ||  1.0;
+  var avg = (max + min) / 2;
+  var range = (max - min);
+  return (Math.random() * range) + min;
 };
 
 NeuronCell.prototype.getId = function() {
@@ -32,12 +40,20 @@ NeuronCell.prototype.setV = function( v ) {
   return this.v = v;
 };
 
+NeuronCell.prototype.initV = function() {
+  return this.setV( this.getRandomNumber() );
+};
+
 NeuronCell.prototype.getW = function( k ) {
   return this.w[ k ] || 1;
 };
 
 NeuronCell.prototype.setW = function( k, w ) {
   return this.w[ k ] = w;
+};
+
+NeuronCell.prototype.initW = function( k ) {
+  return this.setW( k, this.getRandomNumber() );
 };
 
 NeuronCell.prototype.getU = function( inputs ) {
