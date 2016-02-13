@@ -9,15 +9,18 @@ Perceptron = function(dataset, hidden_cols) {
   this.output_cols = dataset.output[0].length;
   this.hidden_cols = hidden_cols;
   
-  this.input_data  = {};
+  this.input_data  = [];
+  for ( var i = 0; i < this.rows; i++ )
+    this.input_data[i] = {};
+  
   this.input_cells = {};
   for ( var j = 0; j < this.input_cols; j++ ) {
     var nc = new NeuronCell();
     var id = nc.getId();
     this.input_cells[id] = nc;
-    this.input_data[id] = [];
+
     for ( var i = 0; i < this.rows; i++ )
-      this.input_data[id][i] = dataset.input[i][j];
+      this.input_data[i][id] = dataset.input[i][j];
   }
   
   this.hidden_cells = {};
@@ -29,7 +32,10 @@ Perceptron = function(dataset, hidden_cols) {
     this.hidden_cells[id] = nc;
   }
   
-  this.output_data  = {};
+  this.output_data  = [];
+  for ( var i = 0; i < this.rows; i++ )
+    this.output_data[i] = {};
+    
   this.output_cells = {};
   for ( var j = 0; j < this.output_cols; j++ ) {
     var nc = new NeuronCell();
@@ -37,17 +43,31 @@ Perceptron = function(dataset, hidden_cols) {
     nc.initV();
     for ( var k in this.hidden_cells ) nc.initW( k );
     this.output_cells[id] = nc;
-    this.output_data[id] = [];
+
     for ( var i = 0; i < this.rows; i++ )
-      this.output_data[id][i] = dataset.output[i][j];
+      this.output_data[i][id] = dataset.output[i][j];
   }
   
 };
 
-Perceptron.prototype.learn = function() {
-  
+Perceptron.prototype.foward = function( i ) {
+  var h = {};
+  for ( var k in this.hidden_cells ) {
+    var d = this.hidden_cells[k];
+    h[ d.getId() ] = d.getU( this.input_data[i] );
+  }
+
+  var o = {};
+  for ( var k in this.output_cells ) {
+    var d = this.output_cells[k];
+    var id = d.getId();
+    var u = d.getU( h );
+    o[ id ] = d.sigmoid( u );
+  }
+
+  return o;
 };
 
-Perceptron.prototype.impulse = function(input) {
-
+Perceptron.prototype.olearn = function(input) {
+  
 };
