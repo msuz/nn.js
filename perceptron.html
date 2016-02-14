@@ -11,14 +11,119 @@
     <script src="./perceptron.js"></script>
     <script type="text/javascript">
 $(function() {
-  var dataset_and = {
-    input : [ [0, 0], [0, 1], [1, 0], [1, 1] ],
-    output: [ [0   ], [0   ], [0   ], [1   ] ]
-  };
+  var dataset_and = [
+    { 'input': { 'a': 0, 'b': 0}, 'output': 0},
+    { 'input': { 'a': 0, 'b': 1}, 'output': 0},
+    { 'input': { 'a': 1, 'b': 0}, 'output': 0},
+    { 'input': { 'a': 1, 'b': 1}, 'output': 1},
+  ];
   var p = new Perceptron(dataset_and);
-  
+
 });
     </script>
+    <style type="text/css">
+.bgr { background-color: #f00; }
+.bgg { background-color: #0f0; }
+.bgb { background-color: #00f; }
+    </style>
+
+    <table border=2 cellpadding=10>
+      <tr>
+        <th>Input</th>
+        <th>Hidden</th>
+        <th>Output</th>
+      </tr>
+      <tr>
+        <td id="input_container">
+          
+          <table border=1>
+            <thead>
+              <tr><th>a</th><th>b</th><th>o</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="di_a">0</td><td class="di_b">0</td><td class="do">0</td></tr>
+              <tr class="bgr"><td class="di_a">0</td><td class="di_b">1</td><td class="do">0</td></tr>
+              <tr><td class="di_a">1</td><td class="di_b">0</td><td class="do">0</td></tr>
+              <tr><td class="di_a">1</td><td class="di_b">1</td><td class="to">1</td></tr>
+            </tbody>
+          </table>
+          
+        </td><!--id="input_container"-->
+        <td id="hidden_container">
+          
+          <table border=1 id="h_id_x">
+            <thead>
+              <tr>
+                <th>id</th><th>w_k</th><th>w_v</th><th>v</th><th>h</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                 <td class="h_id" rowspan=2>x</td>
+                <td class="h_w_k">a</td>
+                <td class="h_w_v">-1</td>
+                <td class="h_v" rowspan=2>1</td>
+                <td class="h_h bgr" rowspan=2>0.018</td>
+              </tr>
+              <tr>
+                <td class="h_w_key">b</td>
+                <td class="h_w_value">-3</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <br />
+          
+          <table border=1 id="h_id_y">
+            <thead>
+              <tr>
+                <th>id</th><th>w_k</th><th>w_v</th><th>v</th><th>h</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                 <td class="h_id" rowspan=2>y</td>
+                <td class="h_w_k">a</td>
+                <td class="h_w_v">3</td>
+                <td class="h_v" rowspan=2>-2</td>
+                <td class="h_h bgr" rowspan=2>0.953</td>
+              </tr>
+              <tr>
+                <td class="h_w_key">b</td>
+                <td class="h_w_value">1</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </td><!--id="hidden_container"-->
+
+        <td id="output_container">
+          
+          <table border=1 id="h_id_z">
+            <thead>
+              <tr>
+                <th>id</th><th>w_k</th><th>w_v</th><th>v</th><th>o</th><th>e</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="h_id" rowspan=2>z</td>
+                <td class="h_w_k">x</td>
+                <td class="h_w_v bgg">-77</td>
+                <td class="h_v bgg" rowspan=2>114</td>
+                <td class="h_h bgr" rowspan=2>0.048</td>
+                <td class="h_h bgr" rowspan=2>0.048</td>
+              </tr>
+              <tr>
+                <td class="h_w_key">y</td>
+                <td class="h_w_value bgg">118</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </td><!--id="output_container"-->
+      </tr>
+    </table>
 
   </body>
 </html>
