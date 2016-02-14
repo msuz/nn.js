@@ -6,8 +6,8 @@ https://github.com/msuz/nn.js
 /**
  * Constructor
  */
-Perceptron = function( dataset, hidden_cols ) {
-  this.alpha = 30;
+Perceptron = function( dataset, hidden_cols, alpha ) {
+  this.alpha = alpha || 30;
   this.dataset = dataset;
 
   // setup hidden layer neuron cells

@@ -1,13 +1,20 @@
 var $elem = $('<div>').attr('id', 'testElemContainer').appendTo('body');
 
-var dataset = [
+var dataset_and = [
   { 'input': { 'a': 0, 'b': 0}, 'output': 0},
   { 'input': { 'a': 0, 'b': 1}, 'output': 0},
   { 'input': { 'a': 1, 'b': 0}, 'output': 0},
   { 'input': { 'a': 1, 'b': 1}, 'output': 1},
 ];
+var dataset_or = [
+  { 'input': { 'a': 0, 'b': 0}, 'output': 0},
+  { 'input': { 'a': 0, 'b': 1}, 'output': 1},
+  { 'input': { 'a': 1, 'b': 0}, 'output': 1},
+  { 'input': { 'a': 1, 'b': 1}, 'output': 1},
+];
 
 QUnit.test( "construct", function( assert ) {
+  var dataset = dataset_and;
   var p = new Perceptron( dataset, 2 );
 
   assert.equal( typeof p.dataset           , "object" );
@@ -39,6 +46,7 @@ QUnit.test( "construct", function( assert ) {
 });
   
 QUnit.test( "impulse", function( assert ) {
+  var dataset = dataset_and;
   var p = new Perceptron( dataset, 2 );
 
   var w_before = {};
@@ -58,15 +66,30 @@ QUnit.test( "impulse", function( assert ) {
   assert.notDeepEqual( w_after, w_before );
 });
 
-QUnit.test( "impulse", function( assert ) {
-  var p = new Perceptron( dataset, 2 );
-  for ( var t = 0; t < 5000; t++ ) {
+QUnit.test( "dataset AND alpha=30, threshold=0.05, times=10000", function( assert ) {
+  var dataset = dataset_and;
+  var p = new Perceptron( dataset, 2, 30 );
+  for ( var t = 0; t < 10000; t++ ) {
     dataset.forEach( function( data ) {
       p.impulse( data );
     });
   }
-  assert.equal( p.impulse( dataset[0] ).toFixed(1), 0.0 );
-  assert.equal( p.impulse( dataset[1] ).toFixed(1), 0.0 );
-  assert.equal( p.impulse( dataset[2] ).toFixed(1), 0.0 );
-  assert.equal( p.impulse( dataset[3] ).toFixed(1), 1.0 );
+  assert.equal( p.impulse( dataset[0] ).toFixed(1), dataset[0].output, "(0,0,0)" );
+  assert.equal( p.impulse( dataset[1] ).toFixed(1), dataset[1].output, "(0,1,0)" );
+  assert.equal( p.impulse( dataset[2] ).toFixed(1), dataset[2].output, "(1,0,0)" );
+  assert.equal( p.impulse( dataset[3] ).toFixed(1), dataset[3].output, "(1,1,1)" );
+});
+
+QUnit.test( "dataset OR alpha=30, threshold=0.05, times=10000", function( assert ) {
+  var dataset = dataset_or;
+  var p = new Perceptron( dataset, 2, 30 );
+  for ( var t = 0; t < 10000; t++ ) {
+    dataset.forEach( function( data ) {
+      p.impulse( data );
+    });
+  }
+  assert.equal( p.impulse( dataset[0] ).toFixed(1), dataset[0].output, "(0,0,0)" );
+  assert.equal( p.impulse( dataset[1] ).toFixed(1), dataset[1].output, "(0,1,1)" );
+  assert.equal( p.impulse( dataset[2] ).toFixed(1), dataset[2].output, "(1,0,1)" );
+  assert.equal( p.impulse( dataset[3] ).toFixed(1), dataset[3].output, "(1,1,1)" );
 });
