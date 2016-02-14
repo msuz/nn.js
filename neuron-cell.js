@@ -3,13 +3,13 @@ neuron-cell.js v1.0
 https://github.com/msuz/nn.js
 */
 
-NeuronCell = function() {
-  this.id = this.getRandomString();
-  this.w = {};
-  this.v = 0.0;
+NeuronCell = function( keys ) {
+  this.id = NeuronCell.getRandomString();
+  this.initV();
+  this.initW( keys );
 };
 
-NeuronCell.prototype.getRandomString = function( len ) {
+NeuronCell.getRandomString = function( len ) {
   var l = len || 8;
   var c = "abcdefghijklmnopqrstuvwxyz0123456789";
   var cl = c.length;
@@ -20,7 +20,7 @@ NeuronCell.prototype.getRandomString = function( len ) {
   return r;
 };
 
-NeuronCell.prototype.getRandomNumber = function( a, b ) {
+NeuronCell.getRandomNumber = function( a, b ) {
   var min = Math.min( a, b ) || -1.0;
   var max = Math.max( a, b ) ||  1.0;
   var avg = (max + min) / 2;
@@ -28,40 +28,23 @@ NeuronCell.prototype.getRandomNumber = function( a, b ) {
   return (Math.random() * range) + min;
 };
 
-NeuronCell.prototype.getId = function() {
-  return this.id;
-};
-
-NeuronCell.prototype.getV = function() {
-  return this.v || 0;
-};
-
-NeuronCell.prototype.setV = function( v ) {
-  return this.v = v;
-};
-
 NeuronCell.prototype.initV = function() {
-  return this.setV( this.getRandomNumber() );
+  return this.v = NeuronCell.getRandomNumber();
 };
 
-NeuronCell.prototype.getW = function( k ) {
-  return this.w[ k ] || 1;
+NeuronCell.prototype.initW = function( keys ) {
+  this.w = {};
+  if ( !keys ) return this.w;
+  keys.forEach( function ( k ) {
+    this.w[k] = NeuronCell.getRandomNumber();
+  }, this);
+  return this.w;
 };
 
-NeuronCell.prototype.setW = function( k, w ) {
-  return this.w[ k ] = w;
-};
-
-NeuronCell.prototype.initW = function( k ) {
-  return this.setW( k, this.getRandomNumber() );
-};
-
-NeuronCell.prototype.getU = function( inputs ) {
-  var u = -this.getV();
-  if ( typeof inputs == 'number')
-    return u + inputs;
+NeuronCell.prototype.u = function( inputs ) {
+  var u = -this.v;
   for ( var k in inputs )
-    u += inputs[ k ] * this.getW( k );
+    u += inputs[ k ] * this.w[ k ];
   return u;
 };
 
