@@ -32,3 +32,6 @@ It works on your browser powerd by jQuery.
 ## Author
 
 [msuz](https://github.com/msuz)
+
+## Reference
+[REFERENCE](REFERENCE.md)
