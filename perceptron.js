@@ -3,9 +3,14 @@ perceptron.js v1.0
 https://github.com/msuz/nn.js
 */
 
+/**
+ * Constructor
+ */
 Perceptron = function( dataset, hidden_cols ) {
+  this.alpha = 30;
   this.dataset = dataset;
-  
+
+  // setup hidden layer neuron cells
   var keys = Object.keys( dataset[0].input );
   this.hidden_cells = {};
   for ( var j = 0; j < hidden_cols; j++ ) {
@@ -13,15 +18,22 @@ Perceptron = function( dataset, hidden_cols ) {
    this.hidden_cells[ nc.id ] = nc;
   }
   
+  // setup output layer neuron cell
   var keys = Object.keys( this.hidden_cells );
   this.output_cell = new NeuronCell( keys );
 };
 
+/**
+ * calculate and learn with respect to the data
+ */
 Perceptron.prototype.impulse = function( data ) {
   var h = this.getHiddenData( data.input );
   var o = this.getOutputData( h );
-  var e = data.output - o;
-  return e;
+  var delta = (data.output - o) * o * (1 - o);
+  this.output_cell.v += this.alpha * delta * (-1.0);
+  for ( var k in h )
+    this.output_cell.w[k] += this.alpha * delta * h[k];
+  return o;
 };
 
 Perceptron.prototype.getHiddenData = function( input_data ) {
