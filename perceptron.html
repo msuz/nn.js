@@ -17,112 +17,106 @@ $(function() {
     { 'input': { 'a': 1, 'b': 0}, 'output': 0},
     { 'input': { 'a': 1, 'b': 1}, 'output': 1},
   ];
-  var p = new Perceptron(dataset_and);
+  var p = new Perceptron( dataset_and, 2 );
 
-});
+  $table = $( 'table' ).initPerceptron();
+  var e = [ [], [], [], [] ];
+  for ( var i = 0; i < 1000; i++ ) {
+    for ( var n = 0; n < 4; n++ ) {
+      var r = p.impulse( n );
+      if ( i % 100 ) continue;
+      $table.showPerceptron( p, n, r );
+    }
+  }
+} );
+
+; (function( $ ) {
+
+  $.fn.initPerceptron = function() {
+    var $self = this;
+
+    var $tr1 = $( '<tr>' ).appendTo( $( 'thead', $self ) );
+    $( '<th>' ).attr( 'colspan', 3 ).text( 'Input'    ).appendTo( $tr1 );
+    $( '<th>' ).attr( 'colspan', 4 ).text( 'Hidden X' ).appendTo( $tr1 );
+    $( '<th>' ).attr( 'colspan', 4 ).text( 'Hidden Y' ).appendTo( $tr1 );
+    $( '<th>' ).attr( 'colspan', 4 ).text( 'Output Z' ).appendTo( $tr1 );
+    $( '<th>' ).attr( 'colspan', 1 ).text( 'Error'    ).appendTo( $tr1 );
+
+    var $tr2 = $( '<tr>' ).appendTo( $( 'thead', $self ) );
+    $( '<th>' ).text( 'a'   ).appendTo( $tr2 );
+    $( '<th>' ).text( 'b'   ).appendTo( $tr2 );
+    $( '<th>' ).text( 'o'   ).appendTo( $tr2 );
+    $( '<th>' ).text( 'w_a' ).appendTo( $tr2 );
+    $( '<th>' ).text( 'w_b' ).appendTo( $tr2 );
+    $( '<th>' ).text( 'v'   ).appendTo( $tr2 );
+    $( '<th>' ).text( 'o'   ).appendTo( $tr2 );
+    $( '<th>' ).text( 'w_a' ).appendTo( $tr2 );
+    $( '<th>' ).text( 'w_b' ).appendTo( $tr2 );
+    $( '<th>' ).text( 'v'   ).appendTo( $tr2 );
+    $( '<th>' ).text( 'o'   ).appendTo( $tr2 );
+    $( '<th>' ).text( 'w_x' ).appendTo( $tr2 );
+    $( '<th>' ).text( 'w_y' ).appendTo( $tr2 );
+    $( '<th>' ).text( 'v'   ).appendTo( $tr2 );
+    $( '<th>' ).text( 'o'   ).appendTo( $tr2 );
+    $( '<th>' ).text( 'e'   ).appendTo( $tr2 );
+
+    return $self;
+  };
+
+  $.fn.showPerceptron = function( p, n, r ) {
+    var $self = this;
+
+    var $tr = $( '<tr>' ).appendTo( $( 'tbody', $self ) );
+
+    $( '<td>' ).addClass( 'i_i' ).text( p.dataset[ n ].input.a ).appendTo( $tr );
+    $( '<td>' ).addClass( 'i_i' ).text( p.dataset[ n ].input.b ).appendTo( $tr );
+    $( '<td>' ).addClass( 'i_o' ).text( p.dataset[ n ].output  ).appendTo( $tr );
+
+    $.each( p.hidden_cells, function( id, c ) {
+      $.each( c.w, function( k, w ) {
+        $( '<td>' ).addClass( 'h_w' ).text( w.toFixed( 2 ) ).appendTo( $tr );
+      });
+      $( '<td>' ).addClass( 'h_v' ).text( c.v.toFixed( 2 ) ).appendTo( $tr );
+      $( '<td>' ).addClass( 'h_o' ).text( r.h[ id ].toFixed( 2 ) ).appendTo( $tr );
+    });
+
+    var c = p.output_cell;
+    $.each( c.w, function( k, w ) {
+      $( '<td>' ).addClass( 'o_w' ).text( w.toFixed( 2 ) ).appendTo( $tr );
+    });
+    $( '<td>' ).addClass( 'o_v' ).text( c.v.toFixed( 2 ) ).appendTo( $tr );
+    $( '<td>' ).addClass( 'o_o' ).text( r.o.toFixed( 2 ) ).appendTo( $tr );
+
+    $( '<td>' ).addClass( 'e'   ).text( r.e.toFixed( 2 ) ).appendTo( $tr );
+    
+    return $self;
+  };
+  
+} )( jQuery );
+
     </script>
     <style type="text/css">
 .bgr { background-color: #f00; }
 .bgg { background-color: #0f0; }
 .bgb { background-color: #00f; }
+
+td { text-align: right; }
+
+.i_o, .h_o, .o_o {
+  background-color: #0f0;
+}
+.o_w, .o_v {
+  background-color: #f00;
+}
+.e {
+  background-color: #0ff;
+}
+
     </style>
 
-    <table border=2 cellpadding=10>
-      <tr>
-        <th>Input</th>
-        <th>Hidden</th>
-        <th>Output</th>
-      </tr>
-      <tr>
-        <td id="input_container">
-          
-          <table border=1>
-            <thead>
-              <tr><th>a</th><th>b</th><th>o</th></tr>
-            </thead>
-            <tbody>
-              <tr><td class="di_a">0</td><td class="di_b">0</td><td class="do">0</td></tr>
-              <tr class="bgr"><td class="di_a">0</td><td class="di_b">1</td><td class="do">0</td></tr>
-              <tr><td class="di_a">1</td><td class="di_b">0</td><td class="do">0</td></tr>
-              <tr><td class="di_a">1</td><td class="di_b">1</td><td class="to">1</td></tr>
-            </tbody>
-          </table>
-          
-        </td><!--id="input_container"-->
-        <td id="hidden_container">
-          
-          <table border=1 id="h_id_x">
-            <thead>
-              <tr>
-                <th>id</th><th>w_k</th><th>w_v</th><th>v</th><th>h</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                 <td class="h_id" rowspan=2>x</td>
-                <td class="h_w_k">a</td>
-                <td class="h_w_v">-1</td>
-                <td class="h_v" rowspan=2>1</td>
-                <td class="h_h bgr" rowspan=2>0.018</td>
-              </tr>
-              <tr>
-                <td class="h_w_key">b</td>
-                <td class="h_w_value">-3</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <br />
-          
-          <table border=1 id="h_id_y">
-            <thead>
-              <tr>
-                <th>id</th><th>w_k</th><th>w_v</th><th>v</th><th>h</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                 <td class="h_id" rowspan=2>y</td>
-                <td class="h_w_k">a</td>
-                <td class="h_w_v">3</td>
-                <td class="h_v" rowspan=2>-2</td>
-                <td class="h_h bgr" rowspan=2>0.953</td>
-              </tr>
-              <tr>
-                <td class="h_w_key">b</td>
-                <td class="h_w_value">1</td>
-              </tr>
-            </tbody>
-          </table>
-
-        </td><!--id="hidden_container"-->
-
-        <td id="output_container">
-          
-          <table border=1 id="h_id_z">
-            <thead>
-              <tr>
-                <th>id</th><th>w_k</th><th>w_v</th><th>v</th><th>o</th><th>e</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="h_id" rowspan=2>z</td>
-                <td class="h_w_k">x</td>
-                <td class="h_w_v bgg">-77</td>
-                <td class="h_v bgg" rowspan=2>114</td>
-                <td class="h_h bgr" rowspan=2>0.048</td>
-                <td class="h_h bgr" rowspan=2>0.048</td>
-              </tr>
-              <tr>
-                <td class="h_w_key">y</td>
-                <td class="h_w_value bgg">118</td>
-              </tr>
-            </tbody>
-          </table>
-
-        </td><!--id="output_container"-->
-      </tr>
+    <table border=1>
+      <thead></thead>
+      <tbody></tbody>
     </table>
 
   </body>
