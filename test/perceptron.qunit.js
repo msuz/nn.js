@@ -54,10 +54,16 @@ QUnit.test( "impulse", function( assert ) {
     w_before[k] = p.output_cell.w[k];
   }
 
-  var e = p.impulse( dataset[0] );
-  assert.ok( e >= -1.0 );
-  assert.ok( e <=  1.0 );
-  assert.ok( e !=  0.0 );
+  var r = p.impulse( 0 );
+  assert.equal( typeof r.h, "object");
+  assert.equal( typeof r.o, "number");
+  assert.ok( r.o >= -1.0 );
+  assert.ok( r.o <=  1.0 );
+  assert.ok( r.o !=  0.0 );
+  assert.equal( typeof r.e, "number");
+  assert.ok( r.e >= -1.0 );
+  assert.ok( r.e <=  1.0 );
+  assert.ok( r.e !=  0.0 );
   
   var w_after = {};
   for ( var k in p.hidden_cells ) {
@@ -70,26 +76,26 @@ QUnit.test( "dataset AND alpha=30, threshold=0.05, times=10000", function( asser
   var dataset = dataset_and;
   var p = new Perceptron( dataset, 2, 30 );
   for ( var t = 0; t < 10000; t++ ) {
-    dataset.forEach( function( data ) {
-      p.impulse( data );
-    });
+    for ( var i = 0; i < 4; i++ ) {
+      p.impulse( i );
+    }
   }
-  assert.equal( p.impulse( dataset[0] ).toFixed(1), dataset[0].output, "(0,0,0)" );
-  assert.equal( p.impulse( dataset[1] ).toFixed(1), dataset[1].output, "(0,1,0)" );
-  assert.equal( p.impulse( dataset[2] ).toFixed(1), dataset[2].output, "(1,0,0)" );
-  assert.equal( p.impulse( dataset[3] ).toFixed(1), dataset[3].output, "(1,1,1)" );
+  assert.equal( p.impulse( 0 ).o.toFixed(1), dataset[0].output, "(0,0,0)" );
+  assert.equal( p.impulse( 1 ).o.toFixed(1), dataset[1].output, "(0,1,0)" );
+  assert.equal( p.impulse( 2 ).o.toFixed(1), dataset[2].output, "(1,0,0)" );
+  assert.equal( p.impulse( 3 ).o.toFixed(1), dataset[3].output, "(1,1,1)" );
 });
 
 QUnit.test( "dataset OR alpha=30, threshold=0.05, times=10000", function( assert ) {
   var dataset = dataset_or;
   var p = new Perceptron( dataset, 2, 30 );
   for ( var t = 0; t < 10000; t++ ) {
-    dataset.forEach( function( data ) {
-      p.impulse( data );
-    });
+    for ( var i = 0; i < 4; i++ ) {
+      p.impulse( i );
+    }
   }
-  assert.equal( p.impulse( dataset[0] ).toFixed(1), dataset[0].output, "(0,0,0)" );
-  assert.equal( p.impulse( dataset[1] ).toFixed(1), dataset[1].output, "(0,1,1)" );
-  assert.equal( p.impulse( dataset[2] ).toFixed(1), dataset[2].output, "(1,0,1)" );
-  assert.equal( p.impulse( dataset[3] ).toFixed(1), dataset[3].output, "(1,1,1)" );
+  assert.equal( p.impulse( 0 ).o.toFixed(1), dataset[0].output, "(0,0,0)" );
+  assert.equal( p.impulse( 1 ).o.toFixed(1), dataset[1].output, "(0,1,1)" );
+  assert.equal( p.impulse( 2 ).o.toFixed(1), dataset[2].output, "(1,0,1)" );
+  assert.equal( p.impulse( 3 ).o.toFixed(1), dataset[3].output, "(1,1,1)" );
 });
