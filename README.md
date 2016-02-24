@@ -12,8 +12,8 @@ It works on your browser powerd by jQuery.
 
 ## Demo
 
-.... 
-
+![Perceptron AND](and_case.png)
+![Perceptron OR](or_case.png)
 
 ## Contribution
 
