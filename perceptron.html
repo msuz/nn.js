@@ -7,6 +7,7 @@
   <body>
     <h1>JavaScript Neural Network - Perceptron</h1>
     <script src="./jquery-2.2.0.min.js"></script>
+    <script src="./Chart.min.js"></script>
     <script src="./neuron-cell.js"></script>
     <script src="./perceptron.js"></script>
     <script type="text/javascript">
@@ -17,17 +18,61 @@ $(function() {
     { 'input': { 'a': 1, 'b': 0}, 'output': 0},
     { 'input': { 'a': 1, 'b': 1}, 'output': 1},
   ];
-  var p = new Perceptron( dataset_and, 2 );
 
+  var chart_data = {
+    labels: [],
+    datasets: [
+      {
+        label: "row1",
+        fillColor: "rgba(0,0,0,0)",
+        strokeColor: "#F7464A",
+        pointColor: "#F7464A",
+        data: []
+      },
+      {
+        label: "row2",
+        fillColor: "rgba(0,0,0,0)",
+        strokeColor: "#46BFBD",
+        pointColor: "#46BFBD",
+        data: []
+      },
+      {
+        label: "row3",
+        fillColor: "rgba(0,0,0,0)",
+        strokeColor: "#FDB45C",
+        pointColor: "#FDB45C",
+        data: []
+      },
+      {
+        label: "row4",
+        fillColor: "rgba(0,0,0,0)",
+        strokeColor: "#616774",
+        pointColor: "#616774",
+        data: []
+      }
+    ]
+  };
+
+  var p = new Perceptron( dataset_and, 2 );
   $table = $( 'table' ).initPerceptron();
-  var e = [ [], [], [], [] ];
-  for ( var i = 0; i < 1000; i++ ) {
-    for ( var n = 0; n < 4; n++ ) {
-      var r = p.impulse( n );
-      if ( i % 100 ) continue;
-      $table.showPerceptron( p, n, r );
+  
+  var ctx = $("#myChart").get(0).getContext("2d");
+  var myLineChart = new Chart(ctx).Line(chart_data);
+
+  
+  var total = 1;
+  $(".exec").on("click", function() {
+    var t = parseInt( $( this ).val() );
+    for ( var i = 0; i < t; i++, total++ ) {
+      var d = [];
+      for ( var n = 0; n < 4; n++ ) {
+        var r = p.impulse( n );
+        d.push( r.o );
+        if ( i == t - 1 ) $table.showPerceptron( p, n, r );
+      }
+      if ( i == t - 1 ) myLineChart.addData( d, total );
     }
-  }
+  });
 } );
 
 ; (function( $ ) {
@@ -113,6 +158,9 @@ td { text-align: right; }
 }
 
     </style>
+    <input type="button" class="exec" value="10 times" />
+    <input type="button" class="exec" value="100 times" /><br />
+    <canvas id="myChart" width="500" height="400"></canvas>
 
     <table border=1>
       <thead></thead>
